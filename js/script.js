@@ -39,4 +39,49 @@ window.addEventListener('DOMContentLoaded', function(){
             }
         }
     });
+
+
+    // Таймер 
+    let deadline = '2020-02-04'; // задали конечную дату
+
+    function getTimeRemaining(endtime){ //функция определяет остаток времени и вычленяет часы, минуты и секунды
+        let t = Date.parse(endtime)- Date.parse(new Date()),
+            seconds = Math.floor((t/1000) % 60),
+            minutes = Math.floor((t/1000/60) % 60),
+            hours = Math.floor((t/(1000*60*60)));
+           
+        return {   //  результат функции запишется в обьект
+            'total' : t,
+            'hours' : hours,
+            'minutes' : minutes,
+            'seconds' : seconds
+        }
+    }
+    
+    function setClock(id, endtime){ // функция устанавливает время на экране пользователя
+        let timer = document.getElementById('timer'),
+            hours = timer.querySelector('.hours'),
+            minutes = timer.querySelector('.minutes'),
+            seconds = timer.querySelector('.seconds'),
+            timeInterval = setInterval(updateClock, 1000); // функция setInterval будет обновлять данные каждую секунду
+        
+            function updateClock(){
+            let t = getTimeRemaining(endtime);
+            function addZero(num){   // функция добавляет "0" впереди, если значение не двухзначное
+                if(num <= 9) {
+                    return '0' + num;
+                } else return num;
+            };
+            hours.textContent = addZero(t.hours);
+            minutes.textContent = addZero(t.minutes);
+            seconds.textContent = addZero(t.seconds);
+            if(t.total<= 0){
+                clearInterval(timeInterval);
+                hours.textContent = '00';
+                minutes.textContent = '00';
+                seconds.textContent = '00';
+            }
+        }
+    }
+    setClock('timer', deadline);
 });
